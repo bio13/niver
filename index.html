@@ -209,6 +209,83 @@
         hr {
             color: #901010;
         }
+
+        /* ================= FLORES MÁGICAS ================= */
+        .sparkles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: visible;
+            z-index: 9999;
+        }
+
+        .flower {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .flower.back {
+            width: 20px;
+            height: 20px;
+            opacity: 0.5;
+            animation: floatBack 8s ease-out forwards;
+        }
+
+        .flower.front {
+            width: 32px;
+            height: 32px;
+            filter: drop-shadow(0 0 8px rgba(255, 120, 120, 0.9));
+            animation: floatFront 7s ease-out forwards;
+        }
+
+        .flower svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes floatBack {
+            0% {
+                transform: translate(0, 0) scale(0.7);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: translate(10px, -220px) scale(0.9);
+            }
+
+            100% {
+                transform: translate(-10px, -450px) scale(1.1);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatFront {
+            0% {
+                transform: translate(0, 0) scale(0.8) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            40% {
+                transform: translate(25px, -200px) scale(1.05) rotate(15deg);
+            }
+
+            70% {
+                transform: translate(-25px, -350px) scale(1.2) rotate(30deg);
+            }
+
+            100% {
+                transform: translate(20px, -550px) scale(1.3) rotate(45deg);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 
@@ -224,6 +301,9 @@
         <div class="inner-mask">
             <div id="carta">
 
+                <!-- BRILHOS -->
+                <div class="sparkles"></div>
+
                 <div class="card-container">
                     <div class="card" id="card">
 
@@ -238,7 +318,8 @@
                                     <h1 class="text-center"><strong>Birthday Garden Picnic</strong></h1>
 
                                     <div class="mx-5 mt-4 text-center">
-                                        <p class="mx-3">Entre flores, comidinhas gostosas e boas companhias, vou celebrar mais um ano
+                                        <p class="mx-3">Entre flores, comidinhas gostosas e boas companhias, vou
+                                            celebrar mais um ano
                                             de
                                             vida
                                             ao ar livre, aproveitando cada detalhe simples que torna esse momento
@@ -294,6 +375,50 @@
             if (isOpening) {
                 wrapper.classList.remove('closing');
                 wrapper.classList.add('open');
+
+                createFlowers();
+            }
+        }
+
+        function createFlowers() {
+            const container = document.querySelector('.sparkles');
+
+            const colors = [
+                '#f4a3a3',
+                '#ffb3b3',
+                '#f8c8c8',
+                '#f2d8b3'
+            ];
+
+            for (let i = 0; i < 35; i++) {
+                const flower = document.createElement('div');
+
+                const isFront = Math.random() > 0.5;
+                flower.classList.add('flower', isFront ? 'front' : 'back');
+
+                const color = colors[Math.floor(Math.random() * colors.length)];
+
+                flower.innerHTML = `
+        <svg viewBox="0 0 24 24">
+            <g>
+                <circle cx="12" cy="6" r="4" fill="${color}"/>
+                <circle cx="18" cy="12" r="4" fill="${color}"/>
+                <circle cx="12" cy="18" r="4" fill="${color}"/>
+                <circle cx="6" cy="12" r="4" fill="${color}"/>
+                <circle cx="12" cy="12" r="3" fill="#fff8f8"/>
+            </g>
+        </svg>
+        `;
+
+                flower.style.left = Math.random() * 100 + '%';
+                flower.style.top = (75 + Math.random() * 20) + '%';
+                flower.style.animationDelay = (Math.random() * 1.5) + 's';
+
+                container.appendChild(flower);
+
+                setTimeout(() => {
+                    flower.remove();
+                }, isFront ? 7000 : 8000);
             }
         }
     </script>
